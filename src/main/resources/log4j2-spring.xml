@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration monitorInterval="60">
+	<Properties>
+		<Property name="log-path">C:/Migration-logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console-Appender" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>
+					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+		</Console>
+		
+		<RollingFile name="AS400-File-Appender" 
+					 fileName="${log-path}/AS400-log-${date:yyyy-MM-dd}.log" 
+					 filePattern="${log-path}/AS400-log-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>
+					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+		        <SizeBasedTriggeringPolicy size="10MB" />
+		    </Policies>
+		    <DefaultRolloverStrategy max="10"/>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="trace">
+			<AppenderRef ref="Console-Appender" level="info" />
+			<AppenderRef ref="AS400-File-Appender" level="info" />
+		</Root>
+		<Logger name="com.as400.prototype.AS400" additivity="false">
+			<AppenderRef ref="Console-Appender" level="info"/>
+			<AppenderRef ref="AS400-File-Appender" level="info" />
+		</Logger>
+	</Loggers>
+</Configuration>
