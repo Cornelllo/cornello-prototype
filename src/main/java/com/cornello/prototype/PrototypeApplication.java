@@ -1,4 +1,4 @@
-package com.as400.prototype;
+package com.cornello.prototype;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.as400.prototype.controller;
+package com.cornello.prototype.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
