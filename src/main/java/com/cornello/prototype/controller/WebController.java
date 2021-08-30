@@ -1,19 +1,60 @@
 package com.cornello.prototype.controller;
 
+import com.cornello.prototype.entity.AppUser;
+import com.cornello.prototype.entity.Role;
+import com.cornello.prototype.service.UserService;
+import com.google.gson.Gson;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.util.List;
+
+@RequestMapping(value = "/api/v1")
 @RestController
+@RequiredArgsConstructor
 public class WebController {
 
-	private static final Logger logger = LoggerFactory.getLogger(WebController.class);
-	
-	@GetMapping(value = "/test")
-	public String testApi(@RequestBody String body) {
-		logger.info("Starting testAPi()...");
-		return "test success";	
+	private final UserService userService;
+
+	@GetMapping("/users")
+	public ResponseEntity<List<AppUser>> getUsers() {
+		return ResponseEntity.ok().body(userService.getUsers());
 	}
+
+	@PostMapping("/users/save")
+	public ResponseEntity<AppUser> saveUser(@RequestBody AppUser appUser) {
+		URI uri = URI.create(ServletUriComponentsBuilder
+				.fromCurrentContextPath()
+				.path("/api/v1/users/save")
+				.toUriString());
+		return ResponseEntity.created(uri).body(userService.saveUser(appUser));
+	}
+
+	@PostMapping("/roles/save")
+	public ResponseEntity<Role> saveRole(@RequestBody Role role) {
+		URI uri = URI.create(ServletUriComponentsBuilder
+				.fromCurrentContextPath()
+				.path("/api/v1/roles/save")
+				.toUriString());
+		return ResponseEntity.created(uri).body(userService.saveRole(role));
+	}
+
+	@PostMapping("/users/assign-role")
+	public ResponseEntity assignRole(@RequestBody AssignRoleForm form) {
+		userService.assignRole(form.getUsername(),form.getRoleName());
+		return ResponseEntity.ok().build();
+	}
+
+}
+
+@Data
+class AssignRoleForm {
+	private String username;
+	private String roleName;
 }

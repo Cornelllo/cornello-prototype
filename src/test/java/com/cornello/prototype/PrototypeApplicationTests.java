@@ -1,4 +1,4 @@
-package com.as400.prototype;
+package com.cornello.prototype;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
