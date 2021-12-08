@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-<Configuration monitorInterval="60">
+<xml monitorInterval="60">
 	<Properties>
-		<Property name="log-path">C:/Migration-logs</Property>
+		<Property name="APP-NAME">Prototype</Property>
+		<Property name="LOG-PATH">C:/Prototype-logs</Property>
+		<!-- <Property name="LOG-PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property> -->
+		<Property name="LOG-PATTERN">%d{yyyy-MM-dd HH:mm:ss a} [%highlight{%-5level}] [thread-id %T] ClientIP-%X{ip} %logger{36} - %msg%n</Property>
 	</Properties>
 	<Appenders>
 		<Console name="Console-Appender" target="SYSTEM_OUT">
-			<PatternLayout>
-				<pattern>
-					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
-				</pattern>
-			</PatternLayout>
+			<PatternLayout pattern = "${LOG-PATTERN}"/>
 		</Console>
-		
-		<RollingFile name="AS400-File-Appender" 
-					 fileName="${log-path}/AS400-log-${date:yyyy-MM-dd}.log" 
-					 filePattern="${log-path}/AS400-log-%d{yyyy-MM-dd}-%i.log">
-			<PatternLayout>
-				<pattern>
-					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
-				</pattern>
-			</PatternLayout>
+
+		<RollingFile name="Prototype-File-Appender"
+					 fileName="${LOG-PATH}/${APP-NAME}-log-${date:yyyy-MM-dd}.log"
+					 filePattern="${LOG-PATH}/${APP-NAME}-log-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern = "${LOG-PATTERN}"/>
 			<Policies>
 				<TimeBasedTriggeringPolicy interval="1" />
 		        <SizeBasedTriggeringPolicy size="10MB" />
@@ -29,13 +24,25 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Root level="trace">
-			<AppenderRef ref="Console-Appender" level="info" />
-			<AppenderRef ref="AS400-File-Appender" level="info" />
-		</Root>
-		<Logger name="com.as400.prototype.AS400" additivity="false">
-			<AppenderRef ref="Console-Appender" level="info"/>
-			<AppenderRef ref="AS400-File-Appender" level="info" />
+		<!-- LOG SQL statements -->
+		<Logger name="org.hibernate.SQL" additivity="false">
+			<AppenderRef ref="Console-Appender"/>
+			<AppenderRef ref="Prototype-File-Appender"/>
 		</Logger>
+		<!-- LOG JDBC bind parameters -->
+		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="false">
+			<AppenderRef ref="Console-Appender"/>
+			<AppenderRef ref="Prototype-File-Appender"/>
+		</Logger>
+		<!-- LOG custom packages -->
+		<Logger name="com.cornello.prototype" additivity="false">
+			<AppenderRef ref="Console-Appender"/>
+			<AppenderRef ref="Prototype-File-Appender"/>
+		</Logger>
+
+		<Root level="INFO">
+			<AppenderRef ref="Console-Appender"/>
+			<AppenderRef ref="Prototype-File-Appender"/>
+		</Root>
 	</Loggers>
-</Configuration>
+</xml>

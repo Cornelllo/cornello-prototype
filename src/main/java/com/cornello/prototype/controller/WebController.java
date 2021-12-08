@@ -3,11 +3,8 @@ package com.cornello.prototype.controller;
 import com.cornello.prototype.entity.AppUser;
 import com.cornello.prototype.entity.Role;
 import com.cornello.prototype.service.UserService;
-import com.google.gson.Gson;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -46,7 +43,7 @@ public class WebController {
 	}
 
 	@PostMapping("/users/assign-role")
-	public ResponseEntity assignRole(@RequestBody AssignRoleForm form) {
+	public ResponseEntity<Void> assignRole(@RequestBody AssignRoleForm form) {
 		userService.assignRole(form.getUsername(),form.getRoleName());
 		return ResponseEntity.ok().build();
 	}

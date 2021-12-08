@@ -6,12 +6,15 @@ import com.cornello.prototype.repository.AppUserRepository;
 import com.cornello.prototype.repository.RoleRepository;
 import com.cornello.prototype.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,6 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final AppUserRepository appUserRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -38,15 +42,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("User found from database");
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        appUser.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
+        appUser.getRoles().forEach(role ->
+            authorities.add(new SimpleGrantedAuthority(role.getName()))
+        );
         return new User(appUser.getUsername(),appUser.getPassword(),authorities);
     }
 
     @Override
     public AppUser saveUser(AppUser appUser) {
         log.info("Saving user to database");
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         return appUserRepository.save(appUser);
     }
 
