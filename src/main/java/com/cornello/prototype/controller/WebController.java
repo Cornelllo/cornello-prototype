@@ -48,6 +48,13 @@ public class WebController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/users/by")
+	public ResponseEntity<List<AppUser>> getUserByIdAndUsername(
+		@RequestParam("id")String id,
+		@RequestParam("username")String username) {
+		return ResponseEntity.ok().body(userService.getUserByfullNameAndUsername(id,username));
+	}
+
 }
 
 @Data

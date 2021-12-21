@@ -11,4 +11,6 @@ public interface UserService {
     void assignRole(String username, String roleName);
     AppUser getUser(String username);
     List<AppUser> getUsers();
+	List<AppUser> getUserByfullNameAndUsername(String fullName, String username);
+    
 }

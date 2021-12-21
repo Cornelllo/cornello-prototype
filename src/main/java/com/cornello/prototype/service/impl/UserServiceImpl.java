@@ -81,4 +81,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return appUserRepository.findAll();
     }
 
+    @Override
+    public List<AppUser> getUserByfullNameAndUsername(String fullName, String username) {
+        log.info("Getting id: {} and username:{} from the database",fullName,username);
+        return appUserRepository.findByFullNameAndUsername(fullName, username);
+    }
+
 }
