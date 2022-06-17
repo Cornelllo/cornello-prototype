@@ -2,18 +2,23 @@ package com.cornello.prototype.controller;
 
 import com.cornello.prototype.entity.AppUser;
 import com.cornello.prototype.entity.Role;
+import com.cornello.prototype.model.RequestBodyTest;
 import com.cornello.prototype.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 @RequestMapping(value = "/api/v1")
 @RestController
+@Validated
 @RequiredArgsConstructor
 public class WebController {
 
@@ -50,9 +55,19 @@ public class WebController {
 
 	@GetMapping("/users/by")
 	public ResponseEntity<List<AppUser>> getUserByIdAndUsername(
-		@RequestParam("id")String id,
-		@RequestParam("username")String username) {
-		return ResponseEntity.ok().body(userService.getUserByfullNameAndUsername(id,username));
+		@Valid @RequestParam("fullName")String fullName,
+		@Valid @RequestParam("username")String username) throws Exception {
+		return ResponseEntity.ok().body(userService.getUserByfullNameAndUsername(fullName,username));
+	}
+
+	@GetMapping("/users/full-name/{fullName}")
+	public ResponseEntity<List<AppUser>> findByFullName(@PathVariable String fullName) {
+		return ResponseEntity.ok().body(userService.findByFullName(fullName));
+	}
+
+	@PostMapping("/users/test")
+	public ResponseEntity<Object> test(@Valid @RequestBody RequestBodyTest requestBody) throws Exception {
+		return ResponseEntity.ok().body(userService.testFunc(requestBody));
 	}
 
 }

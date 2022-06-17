@@ -15,7 +15,8 @@
 	<description>A prototype app with security</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
+		<!-- for log4j2 vulnerability -->
 		<log4j2.version>2.16.0</log4j2.version>
 	</properties>
 
@@ -23,12 +24,17 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<!-- for log4j2 vulnerability -->
 			<exclusions>
-		        <exclusion>
+		        <exclusion> 
 		            <groupId>org.springframework.boot</groupId>
 		            <artifactId>spring-boot-starter-logging</artifactId>
 		        </exclusion>
 	    	</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -83,6 +89,11 @@
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>3.18.2</version>
+		</dependency>
+		<!-- for HttpClient Connection Pooling -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
 		</dependency>
 	</dependencies>
 
